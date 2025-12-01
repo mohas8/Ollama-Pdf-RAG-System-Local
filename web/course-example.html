@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Introduction to Algorithms - Course Module</title>
+
+    <!-- Course Page Styles -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f5f5f5;
+      }
+
+      .course-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 20px;
+        text-align: center;
+      }
+
+      .course-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      .course-header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .course-nav {
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .course-nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+      }
+
+      .course-nav li {
+        margin: 0;
+      }
+
+      .course-nav a {
+        display: block;
+        padding: 15px 25px;
+        text-decoration: none;
+        color: #333;
+        transition: background 0.3s;
+      }
+
+      .course-nav a:hover {
+        background: #f0f0f0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 30px;
+      }
+
+      .sidebar {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        height: fit-content;
+        position: sticky;
+        top: 70px;
+      }
+
+      .sidebar h3 {
+        margin-bottom: 15px;
+        color: #667eea;
+      }
+
+      .module-list {
+        list-style: none;
+      }
+
+      .module-list li {
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .module-list li:hover {
+        background: #f0f0f0;
+      }
+
+      .module-list li.active {
+        background: #667eea;
+        color: white;
+      }
+
+      .main-content {
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .section {
+        margin-bottom: 40px;
+      }
+
+      .section h2 {
+        color: #667eea;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .section h3 {
+        color: #764ba2;
+        margin-top: 25px;
+        margin-bottom: 15px;
+      }
+
+      .section p {
+        margin-bottom: 15px;
+      }
+
+      .code-block {
+        background: #f8f9fa;
+        border-left: 4px solid #667eea;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      .code-block code {
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+      }
+
+      .highlight-box {
+        background: #e7f3ff;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+      }
+
+      .highlight-box strong {
+        color: #1976d2;
+      }
+
+      .example-box {
+        background: #f1f8e9;
+        border-left: 4px solid #8bc34a;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s;
+      }
+
+      .btn-primary:hover {
+        background: #5568d3;
+      }
+
+      .video-container {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+        margin: 20px 0;
+        border-radius: 8px;
+      }
+
+      .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      @media (max-width: 768px) {
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: relative;
+          top: 0;
+        }
+
+        .course-nav ul {
+          flex-direction: column;
+        }
+      }
+    </style>
+
+    <!-- 🎯 SINGLE LINE CHATBOT EMBED - Just add these two lines! -->
+    <link rel="stylesheet" href="chatbot-widget.css" />
+  </head>
+  <body>
+    <!-- Course Header -->
+    <header class="course-header">
+      <h1>📚 Introduction to Algorithms</h1>
+      <p>
+        Master the fundamentals of algorithms and computational problem solving
+      </p>
+    </header>
+
+    <!-- Course Navigation -->
+    <nav class="course-nav">
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#content">Course Content</a></li>
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="#assignments">Assignments</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+      <div class="content-grid">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <h3>📑 Course Modules</h3>
+          <ul class="module-list">
+            <li class="active">Module 1: Foundations of Algorithms</li>
+            <li>Module 2: Sorting & Searching</li>
+            <li>Module 3: Divide and Conquer</li>
+            <li>Module 4: Dynamic Programming</li>
+            <li>Module 5: Greedy Algorithms</li>
+            <li>Module 6: Graph Algorithms</li>
+          </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+          <section id="overview" class="section">
+            <h2>🎯 Module 1: Foundations of Algorithms</h2>
+
+            <p>
+              Welcome to the first module of our Introduction to Algorithms
+              course! In this module, we'll explore the fundamental concepts of
+              algorithms and computational complexity:
+              <strong>Algorithm Analysis & Growth of Functions</strong>.
+            </p>
+
+            <div class="highlight-box">
+              <strong>💡 Key Learning Objectives:</strong>
+              <ul>
+                <li>Understand what arrays are and how they work</li>
+                <li>Learn about array operations and their time complexity</li>
+                <li>Explore common array algorithms and techniques</li>
+                <li>Practice implementing array-based solutions</li>
+              </ul>
+            </div>
+          </section>
+
+          <section id="content" class="section">
+            <h2>📖 What is an Array?</h2>
+
+            <p>
+              An <strong>array</strong> is a collection of elements stored at
+              contiguous memory locations. It's one of the simplest and most
+              widely used data structures in programming.
+            </p>
+
+            <h3>Key Characteristics:</h3>
+            <ul>
+              <li>
+                <strong>Fixed Size:</strong> Arrays have a predetermined size
+              </li>
+              <li>
+                <strong>Indexed Access:</strong> Elements can be accessed using
+                indices (0-based)
+              </li>
+              <li>
+                <strong>Contiguous Memory:</strong> Elements are stored in
+                adjacent memory locations
+              </li>
+              <li>
+                <strong>Same Data Type:</strong> All elements must be of the
+                same type
+              </li>
+            </ul>
+
+            <div class="code-block">
+              <code>
+                // Example: Declaring and initializing an array<br />
+                int[] numbers = {10, 20, 30, 40, 50};<br />
+                <br />
+                // Accessing elements<br />
+                int firstElement = numbers[0]; // 10<br />
+                int lastElement = numbers[4]; // 50<br />
+                <br />
+                // Modifying elements<br />
+                numbers[2] = 35; // Array becomes {10, 20, 35, 40, 50}
+              </code>
+            </div>
+
+            <h3>⏱️ Time Complexity</h3>
+            <div class="example-box">
+              <ul>
+                <li><strong>Access by Index:</strong> O(1) - Constant time</li>
+                <li>
+                  <strong>Search:</strong> O(n) - Linear time (unsorted array)
+                </li>
+                <li>
+                  <strong>Insert at End:</strong> O(1) - If space available
+                </li>
+                <li>
+                  <strong>Insert at Beginning:</strong> O(n) - Requires shifting
+                </li>
+                <li><strong>Delete:</strong> O(n) - Requires shifting</li>
+              </ul>
+            </div>
+
+            <h3>🔍 Common Array Operations</h3>
+            <p>
+              Let's explore some fundamental operations you'll frequently use
+              with arrays:
+            </p>
+
+            <h4>1. Traversal</h4>
+            <p>Visiting each element in the array sequentially.</p>
+            <div class="code-block">
+              <code>
+                for (int i = 0; i < array.length; i++) {<br />
+                System.out.println(array[i]);<br />
+                }
+              </code>
+            </div>
+
+            <h4>2. Searching</h4>
+            <p>Finding an element in the array (Linear Search).</p>
+            <div class="code-block">
+              <code>
+                int linearSearch(int[] arr, int target) {<br />
+                for (int i = 0; i < arr.length; i++) {<br />
+                if (arr[i] == target) return i;<br />
+                }<br />
+                return -1; // Not found<br />
+                }
+              </code>
+            </div>
+
+            <h4>3. Sorting</h4>
+            <p>
+              Arranging elements in a specific order. We'll cover various
+              sorting algorithms!
+            </p>
+          </section>
+
+          <section id="resources" class="section">
+            <h2>📚 Additional Resources</h2>
+
+            <ul>
+              <li>📄 <a href="#">Download: Array Cheat Sheet (PDF)</a></li>
+              <li>🎥 <a href="#">Watch: Array Operations Video Tutorial</a></li>
+              <li>💻 <a href="#">Practice: Interactive Array Visualizer</a></li>
+              <li>
+                📝 <a href="#">Read: Arrays in Real-World Applications</a>
+              </li>
+            </ul>
+
+            <div class="highlight-box">
+              <strong>💬 Need Help?</strong>
+              <p>
+                Use the chatbot assistant in the bottom-right corner to ask
+                questions about arrays, algorithms, or any course-related
+                topics!
+              </p>
+            </div>
+          </section>
+
+          <section id="assignments" class="section">
+            <h2>✏️ Practice Exercises</h2>
+
+            <h3>Exercise 1: Find Maximum Element</h3>
+            <p>Write a function to find the maximum element in an array.</p>
+
+            <h3>Exercise 2: Reverse an Array</h3>
+            <p>Implement a function to reverse an array in-place.</p>
+
+            <h3>Exercise 3: Two Sum Problem</h3>
+            <p>
+              Given an array and a target sum, find two numbers that add up to
+              the target.
+            </p>
+
+            <button class="btn-primary">Submit Your Solutions</button>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      style="
+        text-align: center;
+        padding: 40px 20px;
+        background: white;
+        margin-top: 40px;
+      "
+    >
+      <p>© 2025 Introduction to Algorithms Course | Powered by BanglaRAG</p>
+    </footer>
+
+    <!-- 🎯 CHATBOT EMBED - Just these 3 lines to activate the chatbot! -->
+    <script>
+      window.BanglaRAGConfig = {
+        apiUrl: "http://localhost:5000",
+        botName: "Course Assistant",
+        botAvatar: "🎓",
+        userAvatar: "👨‍🎓",
+        welcomeMessage:
+          "Hi! I'm your Algorithms course assistant. Ask me anything about algorithms, complexity analysis, or the course content from the Cormen textbook!",
+        primaryColor: "#667eea",
+      };
+    </script>
+    <script src="chatbot-widget.js"></script>
+  </body>
+</html>

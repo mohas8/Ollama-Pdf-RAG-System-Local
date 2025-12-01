@@ -1,0 +1,408 @@
+INTRODUCTION TO DATA STRUCTURES - COURSE KNOWLEDGE BASE
+=======================================================
+
+Course Overview:
+This course provides a comprehensive introduction to data structures and algorithms. Students will learn fundamental concepts, implementation techniques, and practical applications of various data structures.
+
+Prerequisites:
+- Basic programming knowledge (variables, loops, functions)
+- Understanding of basic mathematics
+- Familiarity with at least one programming language (Java, Python, or C++)
+
+Course Duration: 12 weeks
+Credits: 4
+Instructor: Dr. Computer Science
+
+=======================================================
+MODULE 1: ARRAYS AND STRINGS
+=======================================================
+
+What is an Array?
+An array is a collection of elements stored at contiguous memory locations. It's one of the most fundamental data structures in computer science.
+
+Key Characteristics of Arrays:
+1. Fixed Size: Arrays have a predetermined size that cannot be changed after creation
+2. Indexed Access: Elements can be accessed using zero-based indices
+3. Contiguous Memory: All elements are stored in adjacent memory locations
+4. Homogeneous: All elements must be of the same data type
+5. Random Access: Any element can be accessed in constant time O(1)
+
+Array Operations and Time Complexity:
+- Access by Index: O(1) - Direct access using memory address calculation
+- Search (Linear): O(n) - Must check each element sequentially
+- Search (Binary): O(log n) - Only works on sorted arrays
+- Insert at End: O(1) - If space is available
+- Insert at Position: O(n) - Requires shifting elements
+- Delete at Position: O(n) - Requires shifting elements
+- Update Element: O(1) - Direct access and modification
+
+Common Array Algorithms:
+1. Linear Search: Sequential search through array elements
+2. Binary Search: Efficient search on sorted arrays using divide-and-conquer
+3. Bubble Sort: Simple sorting algorithm with O(n²) complexity
+4. Selection Sort: Sorting by repeatedly finding minimum element
+5. Insertion Sort: Building sorted array one element at a time
+6. Merge Sort: Efficient O(n log n) divide-and-conquer sorting
+7. Quick Sort: Fast O(n log n) average case sorting algorithm
+8. Two Pointer Technique: Efficient solution for many array problems
+
+Array Applications:
+- Implementing other data structures (stacks, queues, heaps)
+- Storing tabular data and matrices
+- Implementing hash tables and dynamic programming solutions
+- Buffering and caching mechanisms
+- Image processing and graphics
+
+=======================================================
+MODULE 2: LINKED LISTS
+=======================================================
+
+What is a Linked List?
+A linked list is a linear data structure where elements are stored in nodes, and each node points to the next node in the sequence. Unlike arrays, linked lists do not require contiguous memory.
+
+Types of Linked Lists:
+1. Singly Linked List: Each node points to the next node only
+2. Doubly Linked List: Each node points to both next and previous nodes
+3. Circular Linked List: Last node points back to the first node
+4. Circular Doubly Linked List: Combination of circular and doubly linked
+
+Node Structure:
+A node typically contains:
+- Data: The actual value stored
+- Next: Reference/pointer to the next node
+- Previous: Reference to previous node (in doubly linked lists)
+
+Linked List Operations and Time Complexity:
+- Access by Index: O(n) - Must traverse from head
+- Search: O(n) - Must check each node sequentially
+- Insert at Beginning: O(1) - Update head pointer
+- Insert at End: O(n) for singly, O(1) for doubly with tail pointer
+- Insert at Position: O(n) - Must traverse to position
+- Delete at Beginning: O(1) - Update head pointer
+- Delete at End: O(n) for singly, O(1) for doubly with tail pointer
+- Delete at Position: O(n) - Must traverse to position
+
+Advantages of Linked Lists:
+- Dynamic size (can grow or shrink)
+- Efficient insertion/deletion at beginning
+- No memory waste from unused capacity
+- Easy to implement stacks and queues
+
+Disadvantages of Linked Lists:
+- No random access (must traverse sequentially)
+- Extra memory for storing pointers
+- Not cache-friendly due to non-contiguous memory
+- Traversal is slower compared to arrays
+
+Common Linked List Problems:
+1. Reverse a Linked List
+2. Detect Cycle in Linked List (Floyd's Cycle Detection)
+3. Find Middle Element (Fast and Slow Pointer)
+4. Merge Two Sorted Lists
+5. Remove Nth Node from End
+6. Palindrome Check
+
+=======================================================
+MODULE 3: STACKS AND QUEUES
+=======================================================
+
+STACKS:
+A stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle. The last element added is the first one to be removed.
+
+Stack Operations:
+- Push: Add element to top - O(1)
+- Pop: Remove element from top - O(1)
+- Peek/Top: View top element without removing - O(1)
+- isEmpty: Check if stack is empty - O(1)
+- Size: Get number of elements - O(1)
+
+Stack Implementation:
+- Array-based: Fixed size, simple implementation
+- Linked List-based: Dynamic size, more flexible
+
+Stack Applications:
+1. Function call management (call stack)
+2. Expression evaluation (infix, postfix, prefix)
+3. Backtracking algorithms
+4. Undo/Redo functionality
+5. Browser history navigation
+6. Balanced parentheses checking
+7. Depth-First Search (DFS) traversal
+
+QUEUES:
+A queue is a linear data structure that follows the First-In-First-Out (FIFO) principle. The first element added is the first one to be removed.
+
+Queue Operations:
+- Enqueue: Add element to rear - O(1)
+- Dequeue: Remove element from front - O(1)
+- Front: View front element - O(1)
+- Rear: View rear element - O(1)
+- isEmpty: Check if queue is empty - O(1)
+- Size: Get number of elements - O(1)
+
+Types of Queues:
+1. Simple Queue: Basic FIFO queue
+2. Circular Queue: Last position connects back to first
+3. Priority Queue: Elements have priorities
+4. Double-Ended Queue (Deque): Insert/delete from both ends
+
+Queue Applications:
+1. CPU scheduling and process management
+2. Breadth-First Search (BFS) traversal
+3. Print job scheduling
+4. Handling requests in web servers
+5. Asynchronous data transfer (IO Buffers)
+6. Call center phone systems
+
+=======================================================
+MODULE 4: TREES
+=======================================================
+
+What is a Tree?
+A tree is a hierarchical data structure consisting of nodes connected by edges. It has a root node and child nodes forming a parent-child relationship.
+
+Tree Terminology:
+- Root: The topmost node
+- Parent: Node with children
+- Child: Node descended from another node
+- Leaf: Node with no children
+- Height: Length of longest path from root to leaf
+- Depth: Length of path from root to a node
+- Subtree: Tree formed by a node and its descendants
+
+Binary Trees:
+A binary tree is a tree where each node has at most two children (left and right).
+
+Types of Binary Trees:
+1. Full Binary Tree: Every node has 0 or 2 children
+2. Complete Binary Tree: All levels filled except possibly last
+3. Perfect Binary Tree: All levels completely filled
+4. Balanced Binary Tree: Height difference ≤ 1 for all nodes
+
+Binary Search Tree (BST):
+A binary tree where:
+- Left subtree contains nodes with values less than parent
+- Right subtree contains nodes with values greater than parent
+- Both left and right subtrees are also BSTs
+
+BST Operations:
+- Search: O(h) where h is height - O(log n) balanced, O(n) worst case
+- Insert: O(h) - Similar to search
+- Delete: O(h) - Three cases: leaf, one child, two children
+- Traversal: O(n) - Visit all nodes
+
+Tree Traversal Methods:
+1. Inorder (Left-Root-Right): Gives sorted order for BST
+2. Preorder (Root-Left-Right): Used for creating copy
+3. Postorder (Left-Right-Root): Used for deletion
+4. Level Order: Breadth-first traversal
+
+Tree Applications:
+- File system organization
+- HTML DOM structure
+- Database indexing (B-trees, B+ trees)
+- Expression parsing
+- Decision trees in AI/ML
+
+=======================================================
+MODULE 5: GRAPHS
+=======================================================
+
+What is a Graph?
+A graph is a non-linear data structure consisting of vertices (nodes) and edges (connections between nodes).
+
+Graph Components:
+- Vertex/Node: Fundamental unit representing an entity
+- Edge: Connection between two vertices
+- Weight: Value associated with an edge
+- Path: Sequence of vertices connected by edges
+- Cycle: Path that starts and ends at same vertex
+
+Types of Graphs:
+1. Undirected Graph: Edges have no direction
+2. Directed Graph (Digraph): Edges have direction
+3. Weighted Graph: Edges have weights
+4. Unweighted Graph: All edges treated equally
+5. Connected Graph: Path exists between every pair of vertices
+6. Disconnected Graph: Some vertices not reachable
+
+Graph Representation:
+1. Adjacency Matrix: 2D array - Space O(V²), Edge check O(1)
+2. Adjacency List: Array of lists - Space O(V+E), Edge check O(V)
+3. Edge List: List of edges - Space O(E), Edge check O(E)
+
+Graph Traversal Algorithms:
+1. Depth-First Search (DFS):
+   - Uses stack (or recursion)
+   - Time: O(V + E), Space: O(V)
+   - Applications: Cycle detection, topological sort
+
+2. Breadth-First Search (BFS):
+   - Uses queue
+   - Time: O(V + E), Space: O(V)
+   - Applications: Shortest path, level-order traversal
+
+Important Graph Algorithms:
+1. Dijkstra's Algorithm: Shortest path in weighted graph - O((V+E) log V)
+2. Bellman-Ford: Shortest path with negative weights - O(VE)
+3. Floyd-Warshall: All pairs shortest path - O(V³)
+4. Prim's Algorithm: Minimum spanning tree - O(E log V)
+5. Kruskal's Algorithm: Minimum spanning tree - O(E log E)
+6. Topological Sort: Linear ordering of vertices - O(V + E)
+
+Graph Applications:
+- Social networks (friend connections)
+- Maps and navigation systems
+- Network routing protocols
+- Recommendation systems
+- Web page ranking (PageRank)
+- Circuit design
+
+=======================================================
+MODULE 6: HASH TABLES
+=======================================================
+
+What is a Hash Table?
+A hash table (hash map) is a data structure that implements an associative array, mapping keys to values using a hash function.
+
+Hash Function:
+A function that converts a key into an index in the hash table array.
+
+Good Hash Function Properties:
+- Deterministic: Same key always produces same hash
+- Uniform Distribution: Keys spread evenly across table
+- Efficient: Fast to compute
+- Minimize Collisions: Different keys rarely produce same hash
+
+Collision Resolution Techniques:
+1. Chaining: Store multiple elements in linked list at same index
+2. Open Addressing:
+   - Linear Probing: Check next slots sequentially
+   - Quadratic Probing: Check slots using quadratic function
+   - Double Hashing: Use second hash function
+
+Hash Table Operations:
+- Insert: O(1) average, O(n) worst case
+- Search: O(1) average, O(n) worst case
+- Delete: O(1) average, O(n) worst case
+
+Load Factor:
+α = n/m where n = number of elements, m = table size
+- Lower load factor: Fewer collisions, more space
+- Higher load factor: More collisions, less space
+- Typical: Resize when α > 0.7
+
+Hash Table Applications:
+- Database indexing
+- Caching (web caching, memoization)
+- Symbol tables in compilers
+- Password verification
+- Spell checkers
+- Counting frequencies
+
+=======================================================
+COMMON INTERVIEW QUESTIONS
+=======================================================
+
+Arrays:
+1. Find maximum subarray sum (Kadane's Algorithm)
+2. Rotate array by k positions
+3. Find duplicates in array
+4. Merge sorted arrays
+5. Dutch National Flag problem (sort 0s, 1s, 2s)
+
+Linked Lists:
+1. Reverse linked list iteratively and recursively
+2. Detect and remove cycle
+3. Find intersection point of two lists
+4. Remove duplicates from sorted list
+5. Add two numbers represented as linked lists
+
+Stacks and Queues:
+1. Implement queue using stacks
+2. Implement stack using queues
+3. Evaluate postfix expression
+4. Next greater element
+5. Sliding window maximum
+
+Trees:
+1. Check if tree is balanced
+2. Lowest common ancestor
+3. Serialize and deserialize tree
+4. Validate BST
+5. Convert sorted array to BST
+
+Graphs:
+1. Number of islands (DFS/BFS)
+2. Course schedule (topological sort)
+3. Clone graph
+4. Word ladder
+5. Network delay time
+
+=======================================================
+BEST PRACTICES AND TIPS
+=======================================================
+
+Time Complexity Analysis:
+- Always analyze worst, average, and best cases
+- Consider both time and space complexity
+- Big O notation: O(1), O(log n), O(n), O(n log n), O(n²), O(2ⁿ)
+
+Problem-Solving Approach:
+1. Understand the problem completely
+2. Consider edge cases
+3. Think of brute force solution first
+4. Optimize using appropriate data structure
+5. Test with sample inputs
+6. Analyze time and space complexity
+
+Common Optimization Techniques:
+- Use hash tables for O(1) lookups
+- Two pointer technique for array problems
+- Sliding window for subarray problems
+- Dynamic programming for optimization problems
+- Divide and conquer for recursive solutions
+
+Study Resources:
+- Practice on LeetCode, HackerRank, CodeForces
+- Visualize data structures at visualgo.net
+- Read "Introduction to Algorithms" by Cormen
+- Watch MIT OpenCourseWare lectures
+- Join coding communities and forums
+
+=======================================================
+COURSE ASSESSMENT
+=======================================================
+
+Grading Breakdown:
+- Weekly Quizzes: 20%
+- Programming Assignments: 30%
+- Midterm Exam: 20%
+- Final Project: 20%
+- Class Participation: 10%
+
+Assignment Guidelines:
+- All code must be well-commented
+- Include time and space complexity analysis
+- Test with multiple test cases
+- Submit before deadline to avoid penalties
+- Plagiarism will result in zero marks
+
+Office Hours:
+- Monday: 2:00 PM - 4:00 PM
+- Wednesday: 3:00 PM - 5:00 PM
+- Or by appointment via email
+
+Contact Information:
+Email: ds-course@university.edu
+Course Forum: Available on learning portal
+TA Support: Available during lab sessions
+
+=======================================================
+END OF KNOWLEDGE BASE
+=======================================================
+
+This knowledge base will be continuously updated throughout the course. Students are encouraged to ask questions using the course chatbot or during office hours.
+
+Last Updated: October 2025
+Version: 1.0

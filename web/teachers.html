@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teachers Dashboard - Automatic Question Generation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .header h1 {
+        color: #667eea;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        color: #666;
+        font-size: 1.1em;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .card h2 {
+        color: #333;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .card h2::before {
+        content: "📝";
+        font-size: 1.5em;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+        font-weight: 600;
+      }
+
+      .form-group select,
+      .form-group input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: border-color 0.3s;
+      }
+
+      .form-group select:focus,
+      .form-group input[type="number"]:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 10px;
+      }
+
+      .checkbox-group label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 8px 16px;
+        background: #f5f5f5;
+        border-radius: 20px;
+        transition: background 0.3s;
+      }
+
+      .checkbox-group label:hover {
+        background: #e8eaf6;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+
+      .generate-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .generate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .generate-btn:active {
+        transform: translateY(0);
+      }
+
+      .generate-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 20px;
+        color: #667eea;
+      }
+
+      .loading.active {
+        display: block;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .results-area {
+        min-height: 400px;
+        max-height: 600px;
+        overflow-y: auto;
+      }
+
+      .question-card {
+        background: #f9f9f9;
+        border-left: 4px solid #667eea;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        animation: slideIn 0.5s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .question-card h3 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      .question-card .meta {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 12px;
+        font-size: 0.9em;
+        color: #666;
+      }
+
+      .question-card .meta span {
+        background: #e8eaf6;
+        padding: 4px 10px;
+        border-radius: 12px;
+      }
+
+      .question-card .question-text {
+        color: #333;
+        line-height: 1.6;
+        margin-bottom: 12px;
+        font-size: 1.05em;
+      }
+
+      .question-card .answer {
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        color: #555;
+        line-height: 1.6;
+      }
+
+      .question-card .answer strong {
+        color: #667eea;
+      }
+
+      .export-btn {
+        margin-top: 20px;
+        padding: 12px 24px;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .export-btn:hover {
+        background: #45a049;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+      }
+
+      .empty-state svg {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 20px;
+        opacity: 0.3;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎓 Teachers Dashboard</h1>
+        <p>Automatic Question Generation from Course Materials</p>
+      </div>
+
+      <div class="main-content">
+        <!-- Configuration Panel -->
+        <div class="card">
+          <h2>Question Generator</h2>
+
+          <div class="form-group">
+            <label for="module-select">Select Module:</label>
+            <select id="module-select">
+              <option value="all">All Modules</option>
+              <option value="MODULE 1">MODULE 1: ARRAYS AND STRINGS</option>
+              <option value="MODULE 2">MODULE 2: LINKED LISTS</option>
+              <option value="MODULE 3">MODULE 3: STACKS AND QUEUES</option>
+              <option value="MODULE 4">MODULE 4: TREES</option>
+              <option value="MODULE 5">MODULE 5: SORTING AND SEARCHING</option>
+              <option value="MODULE 6">MODULE 6: HASH TABLES</option>
+              <option value="custom">Custom Topic (enter below)</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="custom-topic-group" style="display: none">
+            <label for="custom-topic">Custom Topic/Keywords:</label>
+            <input
+              type="text"
+              id="custom-topic"
+              placeholder="e.g., recursion, dynamic programming, graph algorithms"
+              style="
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 1em;
+              "
+            />
+            <small style="color: #666; display: block; margin-top: 5px">
+              Enter specific topics or keywords to generate questions about
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="difficulty-select">Difficulty Level:</label>
+            <select id="difficulty-select">
+              <option value="mixed">Mixed</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="num-questions">Number of Questions:</label>
+            <input
+              type="number"
+              id="num-questions"
+              min="1"
+              max="20"
+              value="5"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Question Types:</label>
+            <div class="checkbox-group">
+              <label>
+                <input type="checkbox" value="multiple-choice" checked />
+                Multiple Choice
+              </label>
+              <label>
+                <input type="checkbox" value="true-false" checked />
+                True/False
+              </label>
+              <label>
+                <input type="checkbox" value="short-answer" checked />
+                Short Answer
+              </label>
+              <label>
+                <input type="checkbox" value="explain" checked />
+                Explain/Describe
+              </label>
+            </div>
+          </div>
+
+          <button class="generate-btn" id="generate-btn">
+            Generate Questions
+          </button>
+
+          <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Generating questions...</p>
+          </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="card">
+          <h2>Generated Questions</h2>
+          <div class="results-area" id="results-area">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M9 2v2H7C5.9 4 5 4.9 5 6v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-2V2h-2v2H9V2zm8 18H7V9h10v11z"
+                />
+              </svg>
+              <p>
+                No questions generated yet.<br />Configure options and click
+                "Generate Questions"
+              </p>
+            </div>
+          </div>
+          <button class="export-btn" id="export-btn" style="display: none">
+            📥 Export Questions
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let generatedQuestions = [];
+
+      document
+        .getElementById("generate-btn")
+        .addEventListener("click", generateQuestions);
+      document
+        .getElementById("export-btn")
+        .addEventListener("click", exportQuestions);
+
+      // Show/hide custom topic input based on module selection
+      document
+        .getElementById("module-select")
+        .addEventListener("change", function () {
+          const customTopicGroup =
+            document.getElementById("custom-topic-group");
+          if (this.value === "custom") {
+            customTopicGroup.style.display = "block";
+          } else {
+            customTopicGroup.style.display = "none";
+          }
+        });
+
+      async function generateQuestions() {
+        let moduleSelect = document.getElementById("module-select").value;
+        const difficulty = document.getElementById("difficulty-select").value;
+        const numQuestions = parseInt(
+          document.getElementById("num-questions").value
+        );
+
+        // Handle custom topic
+        if (moduleSelect === "custom") {
+          const customTopic = document
+            .getElementById("custom-topic")
+            .value.trim();
+          if (!customTopic) {
+            alert("Please enter a custom topic!");
+            return;
+          }
+          moduleSelect = customTopic;
+        }
+
+        // Get selected question types
+        const typeCheckboxes = document.querySelectorAll(
+          '.checkbox-group input[type="checkbox"]:checked'
+        );
+        const questionTypes = Array.from(typeCheckboxes).map((cb) => cb.value);
+
+        if (questionTypes.length === 0) {
+          alert("Please select at least one question type!");
+          return;
+        }
+
+        // Show loading
+        document.getElementById("generate-btn").disabled = true;
+        document.getElementById("loading").classList.add("active");
+        document.getElementById("results-area").innerHTML = "";
+        generatedQuestions = [];
+
+        try {
+          // Use fetch with streaming for real-time updates
+          const response = await fetch(
+            "http://localhost:5000/api/teachers/generate-questions/stream",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                module: moduleSelect,
+                difficulty: difficulty,
+                num_questions: numQuestions,
+                question_types: questionTypes,
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to start question generation");
+          }
+
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+          let questionIndex = 0;
+
+          while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+
+            // Process complete SSE messages
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || ""; // Keep incomplete line in buffer
+
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                try {
+                  const data = JSON.parse(line.slice(6));
+
+                  if (data.type === "status") {
+                    // Update loading message
+                    const loadingMsg = document.querySelector("#loading p");
+                    if (loadingMsg) loadingMsg.textContent = data.message;
+                  } else if (data.type === "question") {
+                    // Add question in real-time
+                    generatedQuestions.push(data.data);
+                    addQuestionCard(data.data, data.index || ++questionIndex);
+                    document.getElementById("export-btn").style.display =
+                      "block";
+                  } else if (data.type === "complete") {
+                    // Generation complete
+                    document.getElementById("generate-btn").disabled = false;
+                    document
+                      .getElementById("loading")
+                      .classList.remove("active");
+
+                    if (generatedQuestions.length === 0) {
+                      showError(
+                        "No questions generated. Try adjusting your settings."
+                      );
+                    }
+                  } else if (data.type === "error") {
+                    showError(data.message);
+                    document.getElementById("generate-btn").disabled = false;
+                    document
+                      .getElementById("loading")
+                      .classList.remove("active");
+                  }
+                } catch (e) {
+                  console.error("Error parsing SSE data:", e, line);
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Streaming error:", error);
+          // Fallback to non-streaming API
+          console.log("Falling back to non-streaming API...");
+          fallbackToNonStreaming(
+            moduleSelect,
+            difficulty,
+            numQuestions,
+            questionTypes
+          );
+        }
+      }
+
+      async function fallbackToNonStreaming(
+        moduleSelect,
+        difficulty,
+        numQuestions,
+        questionTypes
+      ) {
+        try {
+          const response = await fetch(
+            "http://localhost:5000/api/teachers/generate-questions",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                module: moduleSelect,
+                difficulty: difficulty,
+                num_questions: numQuestions,
+                question_types: questionTypes,
+              }),
+            }
+          );
+
+          const data = await response.json();
+
+          if (data.success) {
+            generatedQuestions = data.questions;
+            displayQuestions(data.questions);
+            document.getElementById("export-btn").style.display = "block";
+          } else {
+            showError(data.error || "Failed to generate questions");
+            if (data.raw_response) {
+              console.error("Raw LLM response:", data.raw_response);
+            }
+          }
+        } catch (error) {
+          showError("Error connecting to server: " + error.message);
+        } finally {
+          document.getElementById("generate-btn").disabled = false;
+          document.getElementById("loading").classList.remove("active");
+        }
+      }
+
+      function addQuestionCard(q, index) {
+        // Add a single question card (for streaming)
+        const resultsArea = document.getElementById("results-area");
+
+        const questionCard = document.createElement("div");
+        questionCard.className = "question-card";
+
+        questionCard.innerHTML = `
+                <h3>Question ${index}</h3>
+                <div class="meta">
+                    <span>📚 ${q.module || "General"}</span>
+                    <span>⭐ ${q.difficulty || "Medium"}</span>
+                    <span>📝 ${q.type || "Multiple Choice"}</span>
+                </div>
+                <div class="question-text">
+                    <strong>Q:</strong> ${q.question}
+                </div>
+                ${
+                  q.options
+                    ? `
+                    <div class="options">
+                        ${q.options
+                          .map(
+                            (opt, i) =>
+                              `<div style="margin: 5px 0; padding: 8px; background: white; border-radius: 4px;">${String.fromCharCode(
+                                65 + i
+                              )}) ${opt}</div>`
+                          )
+                          .join("")}
+                    </div>
+                `
+                    : ""
+                }
+                <div class="answer">
+                    <strong>Answer:</strong> ${q.answer}
+                </div>
+            `;
+
+        resultsArea.appendChild(questionCard);
+
+        // Scroll to show new question
+        questionCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function displayQuestions(questions) {
+        const resultsArea = document.getElementById("results-area");
+        resultsArea.innerHTML = "";
+
+        questions.forEach((q, index) => {
+          addQuestionCard(q, index + 1);
+        });
+      }
+
+      function showError(message) {
+        const resultsArea = document.getElementById("results-area");
+        resultsArea.innerHTML = `
+                <div class="empty-state">
+                    <p style="color: #f44336;">❌ ${message}</p>
+                </div>
+            `;
+      }
+
+      function exportQuestions() {
+        if (generatedQuestions.length === 0) {
+          alert("No questions to export!");
+          return;
+        }
+
+        // Create formatted text content
+        let content = "=".repeat(60) + "\n";
+        content += "GENERATED QUESTIONS - DATA STRUCTURES COURSE\n";
+        content += "=".repeat(60) + "\n\n";
+
+        generatedQuestions.forEach((q, index) => {
+          content += `QUESTION ${index + 1}\n`;
+          content += `Module: ${q.module || "General"}\n`;
+          content += `Difficulty: ${q.difficulty || "Medium"}\n`;
+          content += `Type: ${q.type || "Multiple Choice"}\n`;
+          content += `-`.repeat(60) + "\n";
+          content += `Q: ${q.question}\n\n`;
+
+          if (q.options) {
+            q.options.forEach((opt, i) => {
+              content += `   ${String.fromCharCode(65 + i)}) ${opt}\n`;
+            });
+            content += "\n";
+          }
+
+          content += `ANSWER: ${q.answer}\n`;
+          content += "=".repeat(60) + "\n\n";
+        });
+
+        // Create download
+        const blob = new Blob([content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `questions_${new Date().toISOString().slice(0, 10)}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    </script>
+  </body>
+</html>

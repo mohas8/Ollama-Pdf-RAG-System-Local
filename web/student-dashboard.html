@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Course Learning System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 1.5em;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            color: white;
+            text-align: right;
+        }
+
+        .user-info .name {
+            font-weight: 600;
+        }
+
+        .user-info .role {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .welcome-card h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .welcome-card p {
+            color: #666;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h2 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card h2 .icon {
+            font-size: 1.3em;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .feature-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .feature-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .feature-btn.secondary {
+            background: #4caf50;
+        }
+
+        .feature-btn.secondary:hover {
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .feature-btn.orange {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+
+        .feature-btn.orange:hover {
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .search-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .search-input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input-group input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .search-input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn.web {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+        }
+
+        .search-btn.video {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .search-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .result-card a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .result-card a:hover {
+            text-decoration: underline;
+        }
+
+        .video-card {
+            border-left-color: #f44336;
+        }
+
+        .video-card .meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .video-card .meta span {
+            background: #e3f2fd;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        /* Loading */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-overlay p {
+            margin-top: 20px;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background: #e8eaf6;
+            color: #5c6bc0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-input-group {
+                flex-direction: column;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">📚 Course System</a>
+        <div class="navbar-user">
+            <div class="user-info">
+                <div class="name" id="user-name">Student</div>
+                <div class="role">👨‍🎓 Student</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h1>👋 Welcome back, <span id="welcome-name">Student</span>!</h1>
+            <p>Explore course materials, search the web, and find educational videos.</p>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <h2>🔍 Search & Discover</h2>
+            <div class="search-input-group">
+                <input type="text" id="search-query" placeholder="Enter a topic (e.g., Binary Search Trees, Dynamic Programming, Sorting Algorithms)">
+            </div>
+            <div class="search-buttons">
+                <button class="search-btn web" onclick="searchWeb()">
+                    🌐 Search Web
+                </button>
+                <button class="search-btn video" onclick="searchVideos()">
+                    📺 Find Videos
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="results-section">
+            <h3 id="results-title">🔍 Search Results</h3>
+            <div id="results-content"></div>
+        </div>
+
+        <!-- Feature Cards -->
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h2><span class="icon">💬</span> Course Chatbot</h2>
+                <p>Ask questions about algorithms, data structures, and course materials. Get instant answers powered by AI.</p>
+                <a href="/" class="feature-btn">Start Chatting</a>
+            </div>
+
+            <div class="feature-card">
+                <h2><span class="icon">📖</span> Course Materials</h2>
+                <p>Access lecture notes, textbook references, and supplementary materials for your studies.</p>
+                <a href="/course-example.html" class="feature-btn secondary">View Materials</a>
+            </div>
+
+            <div class="feature-card">
+                <h2><span class="icon">🧠</span> Practice Questions</h2>
+                <p>Test your knowledge with practice questions and quizzes generated from course content.</p>
+                <button class="feature-btn orange" onclick="generatePracticeQuestions()">Generate Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loading-text">Searching...</p>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+        let currentUser = null;
+
+        // Check authentication on load
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('auth_token');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+                window.location.href = '/login';
+                return;
+            }
+
+            currentUser = JSON.parse(user);
+            
+            // Verify it's a student
+            if (currentUser.role !== 'student') {
+                window.location.href = '/teachers-dashboard';
+                return;
+            }
+
+            document.getElementById('user-name').textContent = currentUser.full_name || currentUser.username;
+            document.getElementById('welcome-name').textContent = currentUser.full_name || currentUser.username;
+        });
+
+        function logout() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+
+        function setLoading(show, text = 'Searching...') {
+            const overlay = document.getElementById('loading-overlay');
+            document.getElementById('loading-text').textContent = text;
+            overlay.classList.toggle('active', show);
+        }
+
+        async function searchWeb() {
+            const query = document.getElementById('search-query').value.trim();
+            if (!query) {
+                alert('Please enter a search topic');
+                return;
+            }
+
+            setLoading(true, 'Searching the web...');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/search/web`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayWebResults(data.results, query);
+                } else {
+                    alert(data.error || 'Search failed');
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                alert('Failed to search. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function searchVideos() {
+            const query = document.getElementById('search-query').value.trim();
+            if (!query) {
+                alert('Please enter a topic to find videos');
+                return;
+            }
+
+            setLoading(true, 'Finding educational videos...');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/search/videos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    },
+                    body: JSON.stringify({ topic: query })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayVideoResults(data.results, query);
+                } else {
+                    alert(data.error || 'Video search failed');
+                }
+            } catch (error) {
+                console.error('Video search error:', error);
+                alert('Failed to find videos. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function displayWebResults(results, query) {
+            const section = document.getElementById('results-section');
+            const content = document.getElementById('results-content');
+            document.getElementById('results-title').innerHTML = `🌐 Web Results for "${query}"`;
+
+            let html = '';
+
+            if (results.summary) {
+                html += `
+                    <div class="result-card">
+                        <h4>📋 Overview</h4>
+                        <p>${results.summary}</p>
+                    </div>
+                `;
+            }
+
+            if (results.key_points && results.key_points.length > 0) {
+                html += `<div class="result-card"><h4>🔑 Key Points</h4>`;
+                results.key_points.forEach(point => {
+                    html += `<p><strong>${point.title}:</strong> ${point.description}</p>`;
+                });
+                html += `</div>`;
+            }
+
+            if (results.definitions && results.definitions.length > 0) {
+                html += `<div class="result-card"><h4>📖 Definitions</h4>`;
+                results.definitions.forEach(def => {
+                    html += `<p><strong>${def.term}:</strong> ${def.definition}</p>`;
+                });
+                html += `</div>`;
+            }
+
+            if (results.concepts && results.concepts.length > 0) {
+                html += `<div class="result-card"><h4>💡 Related Concepts</h4><div class="tags">`;
+                results.concepts.forEach(concept => {
+                    html += `<span class="tag">${concept}</span>`;
+                });
+                html += `</div></div>`;
+            }
+
+            if (results.related_topics && results.related_topics.length > 0) {
+                html += `<div class="result-card"><h4>🔗 Related Topics</h4><div class="tags">`;
+                results.related_topics.forEach(topic => {
+                    html += `<span class="tag" style="background:#e8f5e9; color:#388e3c;">${topic}</span>`;
+                });
+                html += `</div></div>`;
+            }
+
+            content.innerHTML = html || '<p>No results found.</p>';
+            section.classList.add('active');
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function displayVideoResults(results, query) {
+            const section = document.getElementById('results-section');
+            const content = document.getElementById('results-content');
+            document.getElementById('results-title').innerHTML = `📺 Video Recommendations for "${query}"`;
+
+            let html = '';
+
+            if (results.video_recommendations && results.video_recommendations.length > 0) {
+                results.video_recommendations.forEach(video => {
+                    html += `
+                        <div class="result-card video-card">
+                            <h4>🎬 ${video.title}</h4>
+                            <p>${video.concepts_covered ? video.concepts_covered.join(', ') : 'Educational content'}</p>
+                            <div class="meta">
+                                <span>⏱️ ${video.duration || 'Various'}</span>
+                                <span>📊 ${video.difficulty || 'All levels'}</span>
+                                <span>📺 ${video.platform || 'YouTube'}</span>
+                            </div>
+                            ${video.youtube_search_url ? `<p style="margin-top:15px;"><a href="${video.youtube_search_url}" target="_blank">🔗 Search on YouTube</a></p>` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            if (results.channels_to_follow && results.channels_to_follow.length > 0) {
+                html += `<div class="result-card"><h4>📢 Recommended Channels</h4>`;
+                results.channels_to_follow.forEach(channel => {
+                    html += `<p><strong>${channel.name}:</strong> ${channel.description}</p>`;
+                });
+                html += `</div>`;
+            }
+
+            if (results.learning_path) {
+                html += `
+                    <div class="result-card">
+                        <h4>🛤️ Suggested Learning Path</h4>
+                        <p>${results.learning_path}</p>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html || '<p>No video recommendations found.</p>';
+            section.classList.add('active');
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function generatePracticeQuestions() {
+            const topic = prompt('Enter a topic for practice questions:', 'Binary Search Trees');
+            if (!topic) return;
+
+            setLoading(true, 'Generating practice questions...');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/generate/mcq`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    },
+                    body: JSON.stringify({ topic, num_questions: 5 })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayQuizResults(data.data, topic);
+                } else {
+                    alert(data.error || 'Failed to generate questions');
+                }
+            } catch (error) {
+                console.error('Quiz generation error:', error);
+                alert('Failed to generate quiz. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function displayQuizResults(data, topic) {
+            const section = document.getElementById('results-section');
+            const content = document.getElementById('results-content');
+            document.getElementById('results-title').innerHTML = `🧠 Practice Quiz: ${topic}`;
+
+            let html = '';
+            
+            if (data.questions && data.questions.length > 0) {
+                data.questions.forEach((q, idx) => {
+                    html += `
+                        <div class="result-card" style="border-left-color: #ff9800;">
+                            <h4>Question ${idx + 1}</h4>
+                            <p><strong>${q.question}</strong></p>
+                            <div style="margin: 15px 0;">
+                    `;
+                    
+                    if (q.options) {
+                        Object.entries(q.options).forEach(([key, value]) => {
+                            html += `<p style="margin: 8px 0; padding: 10px; background: white; border-radius: 6px;">${key}) ${value}</p>`;
+                        });
+                    }
+                    
+                    html += `
+                            </div>
+                            <details style="margin-top: 10px;">
+                                <summary style="cursor: pointer; color: #667eea; font-weight: 600;">Show Answer</summary>
+                                <p style="margin-top: 10px; padding: 15px; background: #e8f5e9; border-radius: 8px;">
+                                    <strong>Answer: ${q.correct_answer}</strong><br>
+                                    ${q.explanation || ''}
+                                </p>
+                            </details>
+                        </div>
+                    `;
+                });
+            }
+
+            content.innerHTML = html || '<p>No questions generated.</p>';
+            section.classList.add('active');
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Enter key to search
+        document.getElementById('search-query').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchWeb();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachers Dashboard - Course Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 1.5em;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            color: white;
+            text-align: right;
+        }
+
+        .user-info .name {
+            font-weight: 600;
+        }
+
+        .user-info .role {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+
+        .sidebar h3 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #555;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: #f5f7fa;
+            color: #667eea;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-item .icon {
+            font-size: 1.3em;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #43a047;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Search Section */
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn.web {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+        }
+
+        .search-btn.video {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Question Card */
+        .question-card {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .question-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .question-card .meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+        }
+
+        .question-card .meta span {
+            background: #e8eaf6;
+            padding: 4px 12px;
+            border-radius: 15px;
+            color: #5c6bc0;
+        }
+
+        .question-card .question-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .question-card .options {
+            margin: 15px 0;
+        }
+
+        .question-card .option {
+            padding: 10px 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .question-card .option.correct {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+
+        .question-card .answer {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .question-card .answer strong {
+            color: #4caf50;
+        }
+
+        /* Results Area */
+        .results-area {
+            min-height: 200px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .result-card.video {
+            border-left-color: #f44336;
+        }
+
+        .result-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .result-card a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .result-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-group label:hover {
+            background: #e8eaf6;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-card .label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background: #e8eaf6;
+            color: #5c6bc0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state .icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Export Button */
+        .export-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">📚 Course System</a>
+        <div class="navbar-user">
+            <div class="user-info">
+                <div class="name" id="user-name">Teacher</div>
+                <div class="role">👨‍🏫 Teacher</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h3>📋 Menu</h3>
+            <div class="nav-item active" data-section="dashboard" onclick="showSection('dashboard')">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </div>
+            <div class="nav-item" data-section="questions" onclick="showSection('questions')">
+                <span class="icon">📝</span>
+                <span>Generate Questions</span>
+            </div>
+            <div class="nav-item" data-section="mcq" onclick="showSection('mcq')">
+                <span class="icon">✅</span>
+                <span>MCQ Generator</span>
+            </div>
+            <div class="nav-item" data-section="search" onclick="showSection('search')">
+                <span class="icon">🔍</span>
+                <span>Search & Videos</span>
+            </div>
+            <div class="nav-item" data-section="materials" onclick="showSection('materials')">
+                <span class="icon">📚</span>
+                <span>Course Materials</span>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Dashboard Section -->
+            <div class="content-section active" id="section-dashboard">
+                <div class="card">
+                    <h2>👋 Welcome, <span id="welcome-name">Teacher</span>!</h2>
+                    <p style="color: #666; margin-bottom: 20px;">Manage your course, generate questions, and explore teaching resources.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="number" id="stat-questions">0</div>
+                            <div class="label">Questions Generated</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number" id="stat-searches">0</div>
+                            <div class="label">Web Searches</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number" id="stat-videos">0</div>
+                            <div class="label">Videos Found</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🚀 Quick Actions</h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                        <button class="btn btn-primary" onclick="showSection('questions')">📝 Generate Exam Questions</button>
+                        <button class="btn btn-primary" onclick="showSection('mcq')">✅ Create MCQs</button>
+                        <button class="btn btn-outline" onclick="showSection('search')">🔍 Search Resources</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Generation Section -->
+            <div class="content-section" id="section-questions">
+                <div class="card">
+                    <h2>📝 Automatic Question Generation</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="module-select">Select Module:</label>
+                            <select id="module-select">
+                                <option value="all">All Modules</option>
+                                <option value="MODULE 1">MODULE 1: ARRAYS AND STRINGS</option>
+                                <option value="MODULE 2">MODULE 2: LINKED LISTS</option>
+                                <option value="MODULE 3">MODULE 3: STACKS AND QUEUES</option>
+                                <option value="MODULE 4">MODULE 4: TREES</option>
+                                <option value="MODULE 5">MODULE 5: SORTING AND SEARCHING</option>
+                                <option value="MODULE 6">MODULE 6: HASH TABLES</option>
+                                <option value="custom">Custom Topic</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="difficulty-select">Difficulty Level:</label>
+                            <select id="difficulty-select">
+                                <option value="mixed">Mixed</option>
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="num-questions">Number of Questions:</label>
+                            <input type="number" id="num-questions" min="1" max="20" value="5">
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="custom-topic-group" style="display: none;">
+                        <label for="custom-topic">Custom Topic:</label>
+                        <input type="text" id="custom-topic" placeholder="e.g., recursion, dynamic programming">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Question Types:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" value="multiple-choice" checked> Multiple Choice</label>
+                            <label><input type="checkbox" value="true-false" checked> True/False</label>
+                            <label><input type="checkbox" value="short-answer" checked> Short Answer</label>
+                            <label><input type="checkbox" value="explain" checked> Explain</label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="generate-questions-btn" onclick="generateQuestions()">
+                        🚀 Generate Questions
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h2>📋 Generated Questions</h2>
+                    <div class="loading" id="questions-loading">
+                        <div class="spinner"></div>
+                        <p>Generating questions...</p>
+                    </div>
+                    <div class="results-area" id="questions-results">
+                        <div class="empty-state">
+                            <div class="icon">📝</div>
+                            <p>No questions generated yet.<br>Configure options above and click "Generate Questions"</p>
+                        </div>
+                    </div>
+                    <div class="export-section" id="export-section" style="display: none;">
+                        <button class="btn btn-success" onclick="exportQuestions()">📥 Export Questions</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MCQ Generator Section -->
+            <div class="content-section" id="section-mcq">
+                <div class="card">
+                    <h2>✅ MCQ Generator (Gemini AI)</h2>
+                    <p style="color: #666; margin-bottom: 20px;">Generate high-quality multiple choice questions using Google's Gemini AI.</p>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mcq-topic">Topic:</label>
+                            <input type="text" id="mcq-topic" placeholder="e.g., Binary Search Trees, Quicksort">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mcq-num">Number of Questions:</label>
+                            <input type="number" id="mcq-num" min="1" max="20" value="5">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mcq-difficulty">Difficulty:</label>
+                            <select id="mcq-difficulty">
+                                <option value="mixed">Mixed</option>
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="generateMCQ()">
+                        ✨ Generate MCQs
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h2>📋 Generated MCQs</h2>
+                    <div class="loading" id="mcq-loading">
+                        <div class="spinner"></div>
+                        <p>Generating MCQs with Gemini AI...</p>
+                    </div>
+                    <div class="results-area" id="mcq-results">
+                        <div class="empty-state">
+                            <div class="icon">✅</div>
+                            <p>No MCQs generated yet.<br>Enter a topic and click "Generate MCQs"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Videos Section -->
+            <div class="content-section" id="section-search">
+                <div class="card">
+                    <h2>🔍 Search & Find Videos</h2>
+                    <p style="color: #666; margin-bottom: 20px;">Search the web for information or find educational videos on any topic.</p>
+                    
+                    <div class="search-box">
+                        <input type="text" id="search-query" placeholder="Enter a topic (e.g., Red-Black Trees, Graph Algorithms)">
+                    </div>
+                    
+                    <div class="search-buttons">
+                        <button class="search-btn web" onclick="searchWeb()">
+                            🌐 Search Web
+                        </button>
+                        <button class="search-btn video" onclick="searchVideos()">
+                            📺 Find Videos
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" id="search-results-card" style="display: none;">
+                    <h2 id="search-results-title">🔍 Results</h2>
+                    <div class="loading" id="search-loading">
+                        <div class="spinner"></div>
+                        <p>Searching...</p>
+                    </div>
+                    <div class="results-area" id="search-results"></div>
+                </div>
+            </div>
+
+            <!-- Course Materials Section -->
+            <div class="content-section" id="section-materials">
+                <div class="card">
+                    <h2>📚 Course Materials</h2>
+                    <p style="color: #666; margin-bottom: 20px;">Access and manage course materials.</p>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                        <a href="/course-example.html" class="btn btn-primary" target="_blank">
+                            📖 View Course Page
+                        </a>
+                        <a href="/" class="btn btn-outline" target="_blank">
+                            💬 Student Chatbot
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+        let currentUser = null;
+        let generatedQuestions = [];
+        let stats = { questions: 0, searches: 0, videos: 0 };
+
+        // Load stats from localStorage
+        function loadStats() {
+            const saved = localStorage.getItem('teacher_stats');
+            if (saved) {
+                stats = JSON.parse(saved);
+                updateStatsDisplay();
+            }
+        }
+
+        function saveStats() {
+            localStorage.setItem('teacher_stats', JSON.stringify(stats));
+            updateStatsDisplay();
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('stat-questions').textContent = stats.questions;
+            document.getElementById('stat-searches').textContent = stats.searches;
+            document.getElementById('stat-videos').textContent = stats.videos;
+        }
+
+        // Check authentication on load
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('auth_token');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+                window.location.href = '/login';
+                return;
+            }
+
+            currentUser = JSON.parse(user);
+            
+            // Verify it's a teacher
+            if (currentUser.role !== 'teacher') {
+                window.location.href = '/student-dashboard';
+                return;
+            }
+
+            document.getElementById('user-name').textContent = currentUser.full_name || currentUser.username;
+            document.getElementById('welcome-name').textContent = currentUser.full_name || currentUser.username;
+            
+            loadStats();
+        });
+
+        function logout() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+
+        function showSection(sectionId) {
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.section === sectionId);
+            });
+            
+            // Update sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.toggle('active', section.id === `section-${sectionId}`);
+            });
+        }
+
+        // Custom topic toggle
+        document.getElementById('module-select').addEventListener('change', function() {
+            document.getElementById('custom-topic-group').style.display = 
+                this.value === 'custom' ? 'block' : 'none';
+        });
+
+        // Question Generation (using local Ollama)
+        async function generateQuestions() {
+            let module = document.getElementById('module-select').value;
+            const difficulty = document.getElementById('difficulty-select').value;
+            const numQuestions = parseInt(document.getElementById('num-questions').value);
+            
+            if (module === 'custom') {
+                module = document.getElementById('custom-topic').value.trim();
+                if (!module) {
+                    alert('Please enter a custom topic');
+                    return;
+                }
+            }
+
+            const typeCheckboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
+            const questionTypes = Array.from(typeCheckboxes).map(cb => cb.value);
+
+            if (questionTypes.length === 0) {
+                alert('Please select at least one question type');
+                return;
+            }
+
+            document.getElementById('generate-questions-btn').disabled = true;
+            document.getElementById('questions-loading').classList.add('active');
+            document.getElementById('questions-results').innerHTML = '';
+            generatedQuestions = [];
+
+            try {
+                const response = await fetch(`${API_BASE}/api/teachers/generate-questions/stream`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    },
+                    body: JSON.stringify({
+                        module,
+                        difficulty,
+                        num_questions: numQuestions,
+                        question_types: questionTypes
+                    })
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                handleQuestionEvent(data);
+                            } catch (e) {
+                                console.error('Parse error:', e);
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Generation error:', error);
+                document.getElementById('questions-results').innerHTML = `
+                    <div class="empty-state">
+                        <p style="color: #f44336;">Error generating questions. Please try again.</p>
+                    </div>
+                `;
+            } finally {
+                document.getElementById('generate-questions-btn').disabled = false;
+                document.getElementById('questions-loading').classList.remove('active');
+            }
+        }
+
+        function handleQuestionEvent(data) {
+            if (data.type === 'question') {
+                generatedQuestions.push(data.data);
+                addQuestionCard(data.data, data.index);
+                document.getElementById('export-section').style.display = 'block';
+                stats.questions++;
+                saveStats();
+            } else if (data.type === 'error') {
+                document.getElementById('questions-results').innerHTML = `
+                    <div class="empty-state">
+                        <p style="color: #f44336;">${data.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function addQuestionCard(q, index) {
+            const container = document.getElementById('questions-results');
+            if (container.querySelector('.empty-state')) {
+                container.innerHTML = '';
+            }
+
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <h3>Question ${index}</h3>
+                <div class="meta">
+                    <span>📚 ${q.module || 'General'}</span>
+                    <span>⭐ ${q.difficulty || 'Medium'}</span>
+                    <span>📝 ${q.type || 'Multiple Choice'}</span>
+                </div>
+                <div class="question-text"><strong>Q:</strong> ${q.question}</div>
+                ${q.options ? `
+                    <div class="options">
+                        ${q.options.map((opt, i) => `
+                            <div class="option">${String.fromCharCode(65 + i)}) ${opt}</div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+                <div class="answer"><strong>Answer:</strong> ${q.answer}</div>
+            `;
+            container.appendChild(card);
+        }
+
+        // MCQ Generation (using Gemini)
+        async function generateMCQ() {
+            const topic = document.getElementById('mcq-topic').value.trim();
+            const numQuestions = parseInt(document.getElementById('mcq-num').value);
+            const difficulty = document.getElementById('mcq-difficulty').value;
+
+            if (!topic) {
+                alert('Please enter a topic');
+                return;
+            }
+
+            document.getElementById('mcq-loading').classList.add('active');
+            document.getElementById('mcq-results').innerHTML = '';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/generate/mcq`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    },
+                    body: JSON.stringify({ topic, num_questions: numQuestions, difficulty })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.questions) {
+                    displayMCQResults(data.data.questions);
+                    stats.questions += data.data.questions.length;
+                    saveStats();
+                } else {
+                    document.getElementById('mcq-results').innerHTML = `
+                        <div class="empty-state">
+                            <p style="color: #f44336;">${data.error || 'Failed to generate MCQs'}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('MCQ error:', error);
+                document.getElementById('mcq-results').innerHTML = `
+                    <div class="empty-state">
+                        <p style="color: #f44336;">Error connecting to server</p>
+                    </div>
+                `;
+            } finally {
+                document.getElementById('mcq-loading').classList.remove('active');
+            }
+        }
+
+        function displayMCQResults(questions) {
+            const container = document.getElementById('mcq-results');
+            container.innerHTML = questions.map((q, idx) => `
+                <div class="question-card">
+                    <h3>Question ${idx + 1}</h3>
+                    <div class="meta">
+                        <span>⭐ ${q.difficulty || 'Medium'}</span>
+                    </div>
+                    <div class="question-text"><strong>Q:</strong> ${q.question}</div>
+                    <div class="options">
+                        ${Object.entries(q.options || {}).map(([key, value]) => `
+                            <div class="option ${key === q.correct_answer ? 'correct' : ''}">${key}) ${value}</div>
+                        `).join('')}
+                    </div>
+                    <div class="answer">
+                        <strong>Correct Answer:</strong> ${q.correct_answer}
+                        ${q.explanation ? `<br><em>${q.explanation}</em>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Web Search
+        async function searchWeb() {
+            const query = document.getElementById('search-query').value.trim();
+            if (!query) {
+                alert('Please enter a search topic');
+                return;
+            }
+
+            document.getElementById('search-results-card').style.display = 'block';
+            document.getElementById('search-loading').classList.add('active');
+            document.getElementById('search-results').innerHTML = '';
+            document.getElementById('search-results-title').innerHTML = `🌐 Web Results for "${query}"`;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/search/web`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    displayWebResults(data.results);
+                    stats.searches++;
+                    saveStats();
+                } else {
+                    document.getElementById('search-results').innerHTML = `<p style="color: #f44336;">${data.error}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('search-results').innerHTML = '<p style="color: #f44336;">Search failed</p>';
+            } finally {
+                document.getElementById('search-loading').classList.remove('active');
+            }
+        }
+
+        function displayWebResults(results) {
+            let html = '';
+
+            if (results.summary) {
+                html += `<div class="result-card"><h4>📋 Overview</h4><p>${results.summary}</p></div>`;
+            }
+
+            if (results.key_points?.length > 0) {
+                html += `<div class="result-card"><h4>🔑 Key Points</h4>`;
+                results.key_points.forEach(p => {
+                    html += `<p><strong>${p.title}:</strong> ${p.description}</p>`;
+                });
+                html += `</div>`;
+            }
+
+            if (results.definitions?.length > 0) {
+                html += `<div class="result-card"><h4>📖 Definitions</h4>`;
+                results.definitions.forEach(d => {
+                    html += `<p><strong>${d.term}:</strong> ${d.definition}</p>`;
+                });
+                html += `</div>`;
+            }
+
+            if (results.concepts?.length > 0) {
+                html += `<div class="result-card"><h4>💡 Concepts</h4><div class="tags">`;
+                results.concepts.forEach(c => html += `<span class="tag">${c}</span>`);
+                html += `</div></div>`;
+            }
+
+            document.getElementById('search-results').innerHTML = html || '<p>No results found.</p>';
+        }
+
+        // Video Search
+        async function searchVideos() {
+            const topic = document.getElementById('search-query').value.trim();
+            if (!topic) {
+                alert('Please enter a topic');
+                return;
+            }
+
+            document.getElementById('search-results-card').style.display = 'block';
+            document.getElementById('search-loading').classList.add('active');
+            document.getElementById('search-results').innerHTML = '';
+            document.getElementById('search-results-title').innerHTML = `📺 Videos for "${topic}"`;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/search/videos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    },
+                    body: JSON.stringify({ topic })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    displayVideoResults(data.results);
+                    stats.videos++;
+                    saveStats();
+                } else {
+                    document.getElementById('search-results').innerHTML = `<p style="color: #f44336;">${data.error}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('search-results').innerHTML = '<p style="color: #f44336;">Search failed</p>';
+            } finally {
+                document.getElementById('search-loading').classList.remove('active');
+            }
+        }
+
+        function displayVideoResults(results) {
+            let html = '';
+
+            if (results.video_recommendations?.length > 0) {
+                results.video_recommendations.forEach(v => {
+                    html += `
+                        <div class="result-card video">
+                            <h4>🎬 ${v.title}</h4>
+                            <p>${v.concepts_covered?.join(', ') || 'Educational content'}</p>
+                            <div class="tags">
+                                <span class="tag">⏱️ ${v.duration || 'Various'}</span>
+                                <span class="tag">📊 ${v.difficulty || 'All levels'}</span>
+                            </div>
+                            ${v.youtube_search_url ? `<p style="margin-top:10px;"><a href="${v.youtube_search_url}" target="_blank">🔗 Search on YouTube</a></p>` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            if (results.channels_to_follow?.length > 0) {
+                html += `<div class="result-card"><h4>📢 Recommended Channels</h4>`;
+                results.channels_to_follow.forEach(c => {
+                    html += `<p><strong>${c.name}:</strong> ${c.description}</p>`;
+                });
+                html += `</div>`;
+            }
+
+            document.getElementById('search-results').innerHTML = html || '<p>No videos found.</p>';
+        }
+
+        // Export Questions
+        function exportQuestions() {
+            if (generatedQuestions.length === 0) {
+                alert('No questions to export');
+                return;
+            }
+
+            let content = '='.repeat(60) + '\n';
+            content += 'GENERATED EXAM QUESTIONS\n';
+            content += '='.repeat(60) + '\n\n';
+
+            generatedQuestions.forEach((q, i) => {
+                content += `QUESTION ${i + 1}\n`;
+                content += `Module: ${q.module || 'General'}\n`;
+                content += `Difficulty: ${q.difficulty || 'Medium'}\n`;
+                content += `Type: ${q.type || 'Multiple Choice'}\n`;
+                content += '-'.repeat(60) + '\n';
+                content += `Q: ${q.question}\n\n`;
+
+                if (q.options) {
+                    q.options.forEach((opt, j) => {
+                        content += `   ${String.fromCharCode(65 + j)}) ${opt}\n`;
+                    });
+                    content += '\n';
+                }
+
+                content += `ANSWER: ${q.answer}\n`;
+                content += '='.repeat(60) + '\n\n';
+            });
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `exam_questions_${new Date().toISOString().slice(0, 10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Enter key search
+        document.getElementById('search-query').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchWeb();
+        });
+    </script>
+</body>
+</html>
